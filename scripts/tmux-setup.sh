@@ -24,6 +24,10 @@ UBUNTU_VERSION="$(lsb_release -rs)" || exit $?
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" || exit $?
 PARENT_DIR="$(dirname "$SCRIPT_DIR")" || exit $?
 
+task-start "Setup SSH"
+$SCRIPT_DIR/ssh-setup.sh || exit $?
+task-done "Setup SSH"
+
 task-start "Update sources"
 apt-yes update || exit $?
 task-done "Update sources"
@@ -58,13 +62,17 @@ apt-yes install \
     htop \
     || exit $?
 
-task-start "setup ROS"
+task-start "Setup ROS"
 $SCRIPT_DIR/ros-setup.sh || exit $?
-task-done "setup ROS"
+task-done "Setup ROS"
 
-task-start "setup CAN"
+task-start "Setup CAN"
 $SCRIPT_DIR/can-setup.sh || exit $?
-task-done "setup CAN"
+task-done "Setup CAN"
+
+task-start "Setup SMaRC packages"
+$SCRIPT_DIR/smarc-setup.sh || exit $?
+task-done "Setup SMaRC packages"
 
 task-start "Clean-up packages"
 apt --assume-yes autoremove || exit $?
