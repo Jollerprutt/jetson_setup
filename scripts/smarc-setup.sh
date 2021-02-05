@@ -24,31 +24,28 @@ UBUNTU_VERSION="$(lsb_release -rs)" || exit $?
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" || exit $?
 PARENT_DIR="$(dirname "$SCRIPT_DIR")" || exit $?
 
-task-start "SMaRC packages"
 export ROS_DISTRO=melodic
 
-PACKAGE_NAME=sam_robot.rosinstall
-PACKAGE_PATH=/home/$(logname)/catkin_ws/src/${PACKAGE_NAME}
+# Create known hosts file if missing
+runuser -l $(logname) -c 'cd .ssh/ && touch known_hosts' || exit $?
 
-if [ -f "$PACKAGE_PATH" ]; then
-    echo "${PACKAGE_NAME} already exists, replacing"
-    rm -rf $PACKAGE_PATH
+echo "Adding host keys"
+runuser -l $(logname) -c 'ssh-keyscan github.com >> ~/.ssh/known_hosts' || exit $?
+runuser -l $(logname) -c 'ssh-keyscan gitr.sys.kth.se >> ~/.ssh/known_hosts' || exit $?
+runuser -l $(logname) -c 'ssh-keyscan gits-15.sys.kth.se >> ~/.ssh/known_hosts' || exit $?
+
+ARCH=$(dpkg --print-architecture)
+if [ "$ARCH" == "arm64" ];
+then
+    echo "Jetson?"
+    task-start "Install Jetson-stats"
+    sudo -H pip install -U jetson-stats || exit $?
+    task-done "Install Jetson-stats"
 fi
 
-cmd=$( printf 'cd ~/catkin_ws/src/ && wget https://raw.githubusercontent.com/smarc-project/rosinstall/master/%q' "${PACKAGE_NAME}" ) || exit $?
-runuser -l $(logname) -c "$cmd" || exit $?
+task-start "Install sam_robot packages"
+$SCRIPT_DIR/rosinstall.sh https://raw.githubusercontent.com/smarc-project/rosinstall/master/sam_robot.rosinstall || exit $?
+task-done "Install sam_robot packages"
 
-echo "Converting to SSH access"
-sed -i 's/https:\/\//git@/g' ${PACKAGE_PATH}
-sed -i 's/\.com\//\.com:/g' ${PACKAGE_PATH}
-sed -i 's/\.se\//\.se:/g' ${PACKAGE_PATH}
-
-echo "Installing packages"
-cmd=$( printf 'cd ~/catkin_ws/src/ && vcs import --recursive --w 1 < %q' "${PACKAGE_NAME}" ) || exit $?
-runuser -l $(logname) -c "$cmd" || exit $?
-
-# TODO add Jetson stats and ros package
-
-task-done "SMaRC packages"
 
 echo Success! ["$(basename $0)"]

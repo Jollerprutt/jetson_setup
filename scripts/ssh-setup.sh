@@ -24,6 +24,12 @@ UBUNTU_VERSION="$(lsb_release -rs)" || exit $?
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" || exit $?
 PARENT_DIR="$(dirname "$SCRIPT_DIR")" || exit $?
 
+# Create ssh directory if missing
+runuser -l $(logname) -c 'cd && mkdir -p .ssh/' || exit $?
+
+# Create known hosts file if missing
+runuser -l $(logname) -c 'cd .ssh/ && touch known_hosts' || exit $?
+
 FILE=/home/$(logname)/.ssh/id_ed25519
 if [ -f "$FILE" ]; then
     echo "SSH keys already setup!"
@@ -65,7 +71,6 @@ else
 fi
 exit
 
-mkdir -p /home/$(logname)/.ssh/
 for i in "${CONF_ARRAY[@]}"
 do
     FILE_NAME=$(basename $i)
