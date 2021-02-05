@@ -49,7 +49,7 @@ task-done "Install sam_robot packages"
 
 task-start "Configure uavcan_ros_bridge"
 runuser -l $(logname) -c 'cd ~/catkin_ws/src/uavcan_ros_bridge/ && git submodule update --init --recursive' || exit $?
-cd /home/carl/catkin_ws/src/uavcan_ros_bridge/libuavcan/libuavcan/dsdl_compiler/pyuavcan && python setup.py install || exit $?
+cd /home/$(logname)/catkin_ws/src/uavcan_ros_bridge/libuavcan/libuavcan/dsdl_compiler/pyuavcan && python setup.py install || exit $?
 task-done "Configure uavcan_ros_bridge"
 
 echo Success! ["$(basename $0)"]
