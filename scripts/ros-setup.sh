@@ -72,7 +72,7 @@ apt-yes install \
     ros-${ROS_DISTRO}-py-trees-ros \
     ros-${ROS_DISTRO}-tf2-geometry-msgs \
     ros-${ROS_DISTRO}-pid \
-    ros-${ROS_DISTRO}-geodesy \
+    ros-${ROS_DISTRO}-geographic-info \
     ros-${ROS_DISTRO}-nmea-navsat-driver \
     ros-${ROS_DISTRO}-robot-localization \
     ros-${ROS_DISTRO}-sbg-driver \

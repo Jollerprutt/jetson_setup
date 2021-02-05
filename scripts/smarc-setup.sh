@@ -52,4 +52,12 @@ runuser -l $(logname) -c 'cd ~/catkin_ws/src/uavcan_ros_bridge/ && git submodule
 cd /home/$(logname)/catkin_ws/src/uavcan_ros_bridge/libuavcan/libuavcan/dsdl_compiler/pyuavcan && python setup.py install || exit $?
 task-done "Configure uavcan_ros_bridge"
 
+task-start "Fetch cola2_msgs"
+runuser -l $(logname) -c 'cd ~/catkin_ws/src/ && git clone https://bitbucket.org/iquarobotics/cola2_msgs.git' || exit $?
+task-done "Fetch cola2_msgs"
+
+# task-start "Catkin build"
+# runuser -l $(logname) -c 'source ~/.bashrc && cd ~/catkin_ws/ && catkin clean --yes && catkin build' || exit $?
+# task-done "Catkin build"
+
 echo Success! ["$(basename $0)"]
