@@ -69,7 +69,6 @@ else
     done
     echo
 fi
-exit
 
 for i in "${CONF_ARRAY[@]}"
 do
