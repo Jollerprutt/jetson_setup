@@ -27,6 +27,8 @@ PARENT_DIR="$(dirname "$SCRIPT_DIR")" || exit $?
 apt-yes update || exit $?
 apt-yes install busybox || exit $?
 
+rm -rf /etc/modprobe.d/blacklist-mttcan.conf
+
 FILE=/enable_CAN.sh
 if [ -f "$FILE" ]; then
     echo "$FILE exists."
@@ -57,5 +59,7 @@ else
     echo 'sh /enable_CAN.sh &' >> $FILE2 || exit $?
     echo 'exit 0' >> $FILE2 || exit $?
 fi
+
+chmod +x $FILE2 || exit $?
 
 echo Success! ["$(basename $0)"]
