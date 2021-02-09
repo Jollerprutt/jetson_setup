@@ -26,35 +26,50 @@ PARENT_DIR="$(dirname "$SCRIPT_DIR")" || exit $?
 
 export ROS_DISTRO=melodic
 
-# Create known hosts file if missing
-runuser -l $(logname) -c 'cd .ssh/ && touch known_hosts' || exit $?
+# # Create known hosts file if missing
+# runuser -l $(logname) -c 'cd .ssh/ && touch known_hosts' || exit $?
 
-echo "Adding host keys"
-runuser -l $(logname) -c 'ssh-keyscan github.com >> ~/.ssh/known_hosts' || exit $?
-runuser -l $(logname) -c 'ssh-keyscan gitr.sys.kth.se >> ~/.ssh/known_hosts' || exit $?
-runuser -l $(logname) -c 'ssh-keyscan gits-15.sys.kth.se >> ~/.ssh/known_hosts' || exit $?
+# echo "Adding host keys"
+# runuser -l $(logname) -c 'ssh-keyscan github.com >> ~/.ssh/known_hosts' || exit $?
+# runuser -l $(logname) -c 'ssh-keyscan gitr.sys.kth.se >> ~/.ssh/known_hosts' || exit $?
+# runuser -l $(logname) -c 'ssh-keyscan gits-15.sys.kth.se >> ~/.ssh/known_hosts' || exit $?
 
-ARCH=$(dpkg --print-architecture)
-if [ "$ARCH" == "arm64" ];
+# ARCH=$(dpkg --print-architecture)
+# if [ "$ARCH" == "arm64" ];
+# then
+#     echo "Jetson?"
+#     task-start "Install Jetson-stats"
+#     sudo -H pip install -U jetson-stats || exit $?
+#     task-done "Install Jetson-stats"
+# fi
+
+# task-start "Install sam_robot packages"
+# $SCRIPT_DIR/rosinstall.sh https://raw.githubusercontent.com/smarc-project/rosinstall/master/sam_robot.rosinstall || exit $?
+# task-done "Install sam_robot packages"
+
+# task-start "Configure uavcan_ros_bridge"
+# runuser -l $(logname) -c 'cd ~/catkin_ws/src/uavcan_ros_bridge/ && git submodule update --init --recursive' || exit $?
+# cd /home/$(logname)/catkin_ws/src/uavcan_ros_bridge/libuavcan/libuavcan/dsdl_compiler/pyuavcan && python setup.py install || exit $?
+# task-done "Configure uavcan_ros_bridge"
+
+# task-start "Fetch cola2_msgs"
+# runuser -l $(logname) -c 'cd ~/catkin_ws/src/ && git clone https://bitbucket.org/iquarobotics/cola2_msgs.git' || exit $?
+# task-done "Fetch cola2_msgs"
+
+task-start "Fetch sam sbg config"
+SBG_CONF_DIR=/opt/ros/${ROS_DISTRO}/share/sbg_driver/config
+if [ -d "$SBG_CONF_DIR" ];
 then
-    echo "Jetson?"
-    task-start "Install Jetson-stats"
-    sudo -H pip install -U jetson-stats || exit $?
-    task-done "Install Jetson-stats"
+    if [ ! -f "$SBG_CONF_DIR/ellipse_A_sam.yaml" ]; then
+        echo "sbg configuration missing, fetching"
+        cd $SBG_CONF_DIR && wget https://raw.githubusercontent.com/smarc-project/sbg_ros_driver/noetic-devel/config/ellipse_A_sam.yaml || exit $?
+    else
+        echo "sbg configuration already present"
+    fi
+else
+    echo "sbg driver missing"
 fi
-
-task-start "Install sam_robot packages"
-$SCRIPT_DIR/rosinstall.sh https://raw.githubusercontent.com/smarc-project/rosinstall/master/sam_robot.rosinstall || exit $?
-task-done "Install sam_robot packages"
-
-task-start "Configure uavcan_ros_bridge"
-runuser -l $(logname) -c 'cd ~/catkin_ws/src/uavcan_ros_bridge/ && git submodule update --init --recursive' || exit $?
-cd /home/$(logname)/catkin_ws/src/uavcan_ros_bridge/libuavcan/libuavcan/dsdl_compiler/pyuavcan && python setup.py install || exit $?
-task-done "Configure uavcan_ros_bridge"
-
-task-start "Fetch cola2_msgs"
-runuser -l $(logname) -c 'cd ~/catkin_ws/src/ && git clone https://bitbucket.org/iquarobotics/cola2_msgs.git' || exit $?
-task-done "Fetch cola2_msgs"
+task-done "Fetch sam sbg config"
 
 # task-start "Catkin build"
 # runuser -l $(logname) -c 'source ~/.bashrc && cd ~/catkin_ws/ && catkin clean --yes && catkin build' || exit $?
