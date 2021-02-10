@@ -28,11 +28,13 @@ task-done "Prevent OTA updates of bootloader & kernel"
 UBUNTU_VERSION="$(lsb_release -rs)" || exit $?
 
 task-start "Install tmux"
-
 apt-yes update || exit $?
 apt-yes install tmux || exit $?
-
 task-done "Install tmux"
+
+task-start "Add $(logname) to dialout"
+gpasswd -a $(logname) dialout || exit $?
+task-end "Add $(logname) to dialout"
 
 task-start "Prepare tmux"
 runuser -l $(logname) -c 'tmux new-session -d -s jetson_setup' || exit $?
