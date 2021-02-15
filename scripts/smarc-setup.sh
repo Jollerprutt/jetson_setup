@@ -39,7 +39,10 @@ if [ "$ARCH" == "arm64" ];
 then
     echo "Jetson?"
     task-start "Install Jetson-stats"
-    sudo -H pip install -U jetson-stats || exit $?
+    SAVE_HOME=$(echo $HOME)
+    HOME=/home/root
+    pip install -U jetson-stats || exit $?
+    HOME=$SAVE_HOME
     task-done "Install Jetson-stats"
 fi
 
