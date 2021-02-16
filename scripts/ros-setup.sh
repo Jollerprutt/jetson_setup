@@ -32,6 +32,12 @@ sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /
 # Setup keys
 sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 || exit $?
 
+if [ -z ${1+x} ]; then
+    echo "username is unset";
+else
+    echo "username is set to '$1'";
+    logname=$1
+fi
 
 apt-yes update || exit $?
 apt-yes install ros-${ROS_DISTRO}-desktop || exit $?

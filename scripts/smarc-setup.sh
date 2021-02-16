@@ -10,11 +10,11 @@ function apt-yes {
 }
 
 function task-start {
-    echo ">>>> $@"
+    echo ">> $@"
 }
 
 function task-done {
-    echo "<<<< [OK] $@"
+    echo "<< [OK] $@"
 }
 
 echo Start ["$(basename $0)"]
