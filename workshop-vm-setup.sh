@@ -57,6 +57,10 @@ task-start "Prevent initial login dialog"
 rm -rf /usr/lib/gnome-initial-setup/gnome-initial-setup || exit $?
 task-done "Prevent initial login dialog"
 
+task-start "Prevent new Ubuntu upgrade prompt"
+sed -i 's/Prompt=.*/Prompt=never/g' /etc/update-manager/release-upgrades || exit $?
+task-done "Prevent new Ubuntu upgrade prompt"
+
 task-start "Silence motd"
 chmod -x \
     /etc/update-motd.d/10-help-text \
