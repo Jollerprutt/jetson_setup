@@ -45,4 +45,4 @@ task-start "Install ROS"
 $SCRIPT_DIR/scripts/ros-setup.sh $1 || exit $?
 task-done "Install ROS"
 
-echo Script finished successfully! ["$(basename $0)"]
+echo VM deployed successfully!

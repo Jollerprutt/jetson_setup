@@ -24,6 +24,14 @@ UBUNTU_VERSION="$(lsb_release -rs)" || exit $?
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" || exit $?
 PARENT_DIR="$(dirname "$SCRIPT_DIR")" || exit $?
 
+if [ -z ${1+x} ]; then
+    echo "username is unset";
+    TARGET_USER=$(logname)
+else
+    echo "username is set to '$1'";
+    TARGET_USER=$1
+fi
+
 task-start "Install ROS"
 export ROS_DISTRO=melodic
 # Setup sources
@@ -32,19 +40,12 @@ sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /
 # Setup keys
 sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 || exit $?
 
-if [ -z ${1+x} ]; then
-    echo "username is unset";
-else
-    echo "username is set to '$1'";
-    logname=$1
-fi
-
 apt-yes update || exit $?
 apt-yes install ros-${ROS_DISTRO}-desktop || exit $?
 
 cmd=$( printf 'echo "source /opt/ros/%q/setup.bash" >> ~/.bashrc' "${ROS_DISTRO}" ) || exit $?
-runuser -l $(logname) -c "$cmd" || exit $?
-runuser -l $(logname) -c 'source ~/.bashrc' || exit $?
+runuser -l ${TARGET_USER} -c "$cmd" || exit $?
+runuser -l ${TARGET_USER} -c 'source ~/.bashrc' || exit $?
 
 apt-yes install \
     python-rosdep \
@@ -56,15 +57,15 @@ apt-yes install \
     || exit $?
 
 rosdep init
-runuser -l $(logname) -c 'rosdep update' || exit $?
+runuser -l ${TARGET_USER} -c 'rosdep update' || exit $?
 
 task-done "Install ROS"
 
 task-start "Setup catkin"
-runuser -l $(logname) -c 'echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc' || exit $?
-runuser -l $(logname) -c 'mkdir -p ~/catkin_ws/src' || exit $?
+runuser -l ${TARGET_USER} -c 'echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc' || exit $?
+runuser -l ${TARGET_USER} -c 'mkdir -p ~/catkin_ws/src' || exit $?
 apt-yes install python-catkin-tools || exit $?
-runuser -l $(logname) -c "cd ~/catkin_ws/ && catkin build"
+runuser -l ${TARGET_USER} -c "cd ~/catkin_ws/ && catkin build"
 
 task-done "Setup catkin"
 
