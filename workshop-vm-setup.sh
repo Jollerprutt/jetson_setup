@@ -57,12 +57,11 @@ task-start "Silence motd"
 chmod -x \
     /etc/update-motd.d/10-help-text \
     /etc/update-motd.d/50-motd-news \
-    /etc/update-motd.d/51-cloudguest \
     /etc/update-motd.d/80-livepatch \
-    /etc/update-motd.d/91-release-upgrade
+    /etc/update-motd.d/91-release-upgrade || exit $?
 task-done "Silence motd"
 
 echo "VM deployed successfully!"
 echo "Rebooting..."
 
-reboot -h now
+shutdown -r
