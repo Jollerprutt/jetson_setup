@@ -45,6 +45,10 @@ task-start "Install ROS"
 $SCRIPT_DIR/scripts/ros-setup.sh $1 || exit $?
 task-done "Install ROS"
 
+task-start "Install mesa-utils"
+apt-yes install mesa-utils || exit $?
+task-done "Install mesa-utils"
+
 task-start "Install ubuntu desktop"
 apt-yes install ubuntu-desktop || exit $?
 task-done "Install ubuntu desktop"
