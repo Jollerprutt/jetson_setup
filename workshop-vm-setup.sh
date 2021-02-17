@@ -61,6 +61,10 @@ task-start "Prevent new Ubuntu upgrade prompt"
 sed -i 's/Prompt=.*/Prompt=never/g' /etc/update-manager/release-upgrades || exit $?
 task-done "Prevent new Ubuntu upgrade prompt"
 
+task-start "Add terminal to favorites"
+gsettings set org.gnome.shell favorite-apps "$(gsettings get org.gnome.shell favorite-apps | sed s/.$//), 'org.gnome.Terminal.desktop']" || exit $?
+task-done "Add terminal to favorites"
+
 task-start "Silence motd"
 chmod -x \
     /etc/update-motd.d/10-help-text \
