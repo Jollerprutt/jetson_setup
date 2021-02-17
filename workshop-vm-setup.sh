@@ -21,6 +21,11 @@ echo Start ["$(basename $0)"]
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" || exit $?
 
+task-start "Dist upgrade"
+apt-yes update || exit $?
+apt-yes dist-upgrade || exit $?
+task-done "Dist upgrade"
+
 NO_MACHINE_VERSION=nomachine_7.1.3_1_amd64.deb
 task-start "Install NoMachine"
 wget https://download.nomachine.com/download/7.1/Linux/$NO_MACHINE_VERSION || exit $?
@@ -32,7 +37,8 @@ sed -i 's/XKBLAYOUT="us"/XKBLAYOUT="se"/g' /etc/default/keyboard || exit $?
 task-done "Change to swedish keyboard layout"
 
 task-start "Set password"
-echo "workshop" | passwd --stdin $1
+PASSWORD=workshop
+echo -e "$PASSWORD\n$PASSWORD" |passwd $1 || exit $?
 task-done "Set password"
 
 task-start "Install ROS"
