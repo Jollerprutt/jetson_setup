@@ -45,4 +45,21 @@ task-start "Install ROS"
 $SCRIPT_DIR/scripts/ros-setup.sh $1 || exit $?
 task-done "Install ROS"
 
+task-start "Install ubuntu desktop"
+apt-yes install ubuntu-desktop || exit $?
+task-done "Install ubuntu desktop"
+
+task-start "Prevent initial login dialog"
+rm -rf /usr/lib/gnome-initial-setup/gnome-initial-setup || exit $?
+task-done "Prevent initial login dialog"
+
+task-start "Silence motd"
+chmod -x \
+    /etc/update-motd.d/10-help-text \
+    /etc/update-motd.d/50-motd-news \
+    /etc/update-motd.d/51-cloudguest \
+    /etc/update-motd.d/80-livepatch \
+    /etc/update-motd.d/91-release-upgrade || exit $?
+task-done "Silence motd"
+
 echo VM deployed successfully!
