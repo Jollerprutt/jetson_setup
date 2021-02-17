@@ -59,7 +59,10 @@ chmod -x \
     /etc/update-motd.d/50-motd-news \
     /etc/update-motd.d/51-cloudguest \
     /etc/update-motd.d/80-livepatch \
-    /etc/update-motd.d/91-release-upgrade || exit $?
+    /etc/update-motd.d/91-release-upgrade
 task-done "Silence motd"
 
-echo VM deployed successfully!
+echo "VM deployed successfully!"
+echo "Rebooting..."
+
+reboot -h now
