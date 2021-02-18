@@ -59,8 +59,13 @@ do
 done
 task-done "Move vehicle definitions"
 
+task-start "Install java"
+apt-yes install openjdk-8-jdk || exit $?
+task-done "Install java"
+
 task-start "Compile neptus"
-runuser -l ${TARGET_USER} -c 'cd ~/neptus && ./gradlew' || exit $?
+cmd=$( printf 'cd %qneptus && ./gradlew' "${TARGET_DIR}" ) || exit $?
+runuser -l ${TARGET_USER} -c "$cmd" || exit $?
 task-done "Compile neptus"
 
 task-start "Cleanup"
