@@ -43,20 +43,19 @@ runuser -l ${TARGET_USER} -c "$cmd" || exit $?
 task-done "Clone repos"
 
 task-start "Move vehicle definitions"
-for d in ${TARGET_DIR}imc_ros_bridge/neptus_vehicle_definitions/*/ ; do
+CONF_ARRAY=(`find ${TARGET_DIR}imc_ros_bridge/neptus_vehicle_definitions/ -maxdepth 2 -name "*.nvcl"`)
+if [ ${#CONF_ARRAY[@]} -gt 0 ]; then
+    echo "vehicles found"
+    for i in "${CONF_ARRAY[@]}"
+    do
+        mv $i ${TARGET_DIR}neptus/vehicles-defs/ || exit $?
+    done
+
+    for d in ${TARGET_DIR}imc_ros_bridge/neptus_vehicle_definitions/*/ ; do
     echo "copying $d"
 	cp -ap $d. ${TARGET_DIR}neptus/vehicles-files/ || exit $?
 done
-
-CONF_ARRAY=(`find ${TARGET_DIR}neptus/vehicles-files/ -maxdepth 1 -name "*.nvcl"`)
-if [ ${#CONF_ARRAY[@]} -gt 0 ]; then
-    echo "vehicles found"
 fi
-
-for i in "${CONF_ARRAY[@]}"
-do
-	mv $i ${TARGET_DIR}neptus/vehicles-defs/ || exit $?
-done
 task-done "Move vehicle definitions"
 
 task-start "Install java"
