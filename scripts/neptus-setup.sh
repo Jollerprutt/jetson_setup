@@ -59,7 +59,7 @@ fi
 task-done "Move vehicle definitions"
 
 task-start "Install java"
-apt-yes install openjdk-8-jdk || exit $?
+apt-yes install openjdk-11-jdk || exit $?
 task-done "Install java"
 
 task-start "Compile neptus"
