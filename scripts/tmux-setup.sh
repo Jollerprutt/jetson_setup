@@ -65,7 +65,7 @@ apt-yes install \
 task-start "Setup ROS"
 $SCRIPT_DIR/ros-setup.sh || exit $?
 task-done "Setup ROS"
-
+exit
 task-start "Setup CAN"
 $SCRIPT_DIR/can-setup.sh || exit $?
 task-done "Setup CAN"
