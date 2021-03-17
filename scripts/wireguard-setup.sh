@@ -38,12 +38,6 @@ apt-yes install wireguard wireguard-tools || exit $?
 
 task-done "Install Wireguard"
 
-task-start "Secure Wireguard"
-chown -R root:root /etc/wireguard/ || exit $?
-chmod -R og-rwx /etc/wireguard/* || exit $?
-
-task-done "Secure Wireguard"
-
 task-start "Setup Wireguard"
 for i in "${CONF_ARRAY[@]}"
 do
@@ -56,5 +50,11 @@ do
     # systemctl status wg-quick@$FILE_NAME.service || exit $?
 done
 task-done "Setup Wireguard"
+
+task-start "Secure Wireguard"
+chown -R root:root /etc/wireguard/ || exit $?
+chmod -R og-rwx /etc/wireguard/* || exit $?
+
+task-done "Secure Wireguard"
 
 echo Success! ["$(basename $0)"]
