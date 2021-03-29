@@ -78,6 +78,7 @@ do
     *.pub ) 
         # Public
         echo "Key [$FILE_NAME] found, moving to ~/.ssh/"
+        chmod 400 $i || exit $?
         mv $i /home/$(logname)/.ssh/ || exit $?
         # echo "Key is public"
         ;;
@@ -88,6 +89,7 @@ do
     *)
         # Private
         echo "Key [$FILE_NAME] found, moving to ~/.ssh/"
+        chmod 400 $i || exit $?
         mv $i /home/$(logname)/.ssh/ || exit $?
         echo "Key is private, adding to agent"
         eval "$(ssh-agent -s)" || exit $?
