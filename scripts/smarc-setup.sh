@@ -77,7 +77,7 @@ task-done "Fetch sam sbg config"
 task-start "Install scipy"
 apt-yes update || exit $?
 apt-yes install python-scipy || exit $?
-task-end "Install scipy"
+task-done "Install scipy"
 
 # task-start "Catkin build"
 # runuser -l $(logname) -c 'source ~/.bashrc && cd ~/catkin_ws/ && catkin clean --yes && catkin build' || exit $?
