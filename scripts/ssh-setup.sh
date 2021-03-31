@@ -48,6 +48,7 @@ else
     echo "No SSH key(s) found, generating"
     cmd=$( printf 'ssh-keygen -t ed25519 -N "" -C "%q" -f %q/ssh_keys_host/id_ed25519' "${HOSTNAME}" "${PARENT_DIR}" ) || exit $?
     runuser -l $(logname) -c "$cmd" || exit $?
+    CONF_ARRAY=(`find $PARENT_DIR/ssh_keys_host/ -maxdepth 1 -name "id_*"`)
 
     echo "#############################################################################################"
     echo "########################### SSH Public key. Please add to github! ###########################"
