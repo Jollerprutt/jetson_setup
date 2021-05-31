@@ -84,7 +84,7 @@ apt-yes install \
     ros-${ROS_DISTRO}-robot-localization \
     ros-${ROS_DISTRO}-sbg-driver \
     ros-${ROS_DISTRO}-rosbridge-suite \
-    ros-${ROS_DISTRO}-ddynamic_reconfigure_python \
+    ros-${ROS_DISTRO}-ddynamic-reconfigure-python \
     || exit $?
 
 task-done "Install SMaRC dependencies"
