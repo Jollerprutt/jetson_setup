@@ -79,6 +79,11 @@ apt-yes update || exit $?
 apt-yes install python-scipy || exit $?
 task-done "Install scipy"
 
+task-start "Install vision-msgs"
+apt-yes update || exit $?
+apt-yes install ros-melodic-vision-msgs || exit $?
+task-done "Install vision-msgs"
+
 # task-start "Catkin build"
 # runuser -l $(logname) -c 'source ~/.bashrc && cd ~/catkin_ws/ && catkin clean --yes && catkin build' || exit $?
 # task-done "Catkin build"
