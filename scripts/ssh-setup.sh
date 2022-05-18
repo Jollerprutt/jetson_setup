@@ -59,7 +59,7 @@ else
     echo "Press any key to continue"
     echo
 
-    secs=$((120))
+    secs=$((1800))
     while (( $secs > 0 )); do
     echo -ne "Continuing in: $secs\033[0K\r"
     read -t 1 -n 1
