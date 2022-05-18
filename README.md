@@ -17,3 +17,5 @@ To setup a new xavier, clone the repo and run basic-setup.sh
 
 It will ask for the password twice, after asking the second time it will present you with a SSH key if one is not already available.
 The script will pause for 30 min to give you time to add a generated SSH key, you can conntinue earlier by clicking any key.
+
+Once you are past the SSH configuration you can leave the installation and have some coffee :)
