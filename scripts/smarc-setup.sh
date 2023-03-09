@@ -24,7 +24,14 @@ UBUNTU_VERSION="$(lsb_release -rs)" || exit $?
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" || exit $?
 PARENT_DIR="$(dirname "$SCRIPT_DIR")" || exit $?
 
-export ROS_DISTRO=melodic
+if [ "$UBUNTU_VERSION" == "20.04" ];
+then
+        echo "ROS set to Noetic"
+        export ROS_DISTRO=noetic
+else
+        echo "Assuming melodic"
+        export ROS_DISTRO=melodic
+fi
 
 # Create known hosts file if missing
 runuser -l $(logname) -c 'cd .ssh/ && touch known_hosts' || exit $?
@@ -76,7 +83,7 @@ task-done "Fetch sam sbg config"
 
 task-start "Install scipy"
 apt-yes update || exit $?
-apt-yes install python-scipy || exit $?
+apt-yes install python3-scipy || exit $?
 task-done "Install scipy"
 
 task-start "Install vision-msgs"

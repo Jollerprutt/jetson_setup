@@ -33,7 +33,18 @@ else
 fi
 
 task-start "Install ROS"
-export ROS_DISTRO=melodic
+echo "Ubuntu version $UBUNTU_VERSION";
+
+
+if [ "$UBUNTU_VERSION" == "20.04" ];
+then
+        echo "ROS set to Noetic"
+        export ROS_DISTRO=noetic
+else
+        echo "Assuming melodic"
+        export ROS_DISTRO=melodic
+fi
+
 # Setup sources
 sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' || exit $?
 
@@ -48,12 +59,11 @@ runuser -l ${TARGET_USER} -c "$cmd" || exit $?
 runuser -l ${TARGET_USER} -c 'source ~/.bashrc' || exit $?
 
 apt-yes install \
-    python-rosdep \
-    python-rosinstall \
-    python-rosinstall-generator \
-    python-wstool \
+    python3-rosdep \
+    python3-rosinstall \
+    python3-rosinstall-generator \
+    python3-wstool \
     build-essential \
-    python-rosdep \
     || exit $?
 
 rosdep init
@@ -64,7 +74,7 @@ task-done "Install ROS"
 task-start "Setup catkin"
 runuser -l ${TARGET_USER} -c 'echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc' || exit $?
 runuser -l ${TARGET_USER} -c 'mkdir -p ~/catkin_ws/src' || exit $?
-apt-yes install python-catkin-tools || exit $?
+apt-yes install python3-catkin-tools || exit $?
 runuser -l ${TARGET_USER} -c "cd ~/catkin_ws/ && catkin build"
 
 task-done "Setup catkin"

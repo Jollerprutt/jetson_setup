@@ -21,9 +21,9 @@ echo Start ["$(basename $0)"]
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" || exit $?
 
-task-start "Prevent OTA updates of bootloader & kernel"
-apt-mark hold nvidia-l4t-bootloader nvidia-l4t-kernel nvidia-l4t-kernel-dtbs nvidia-l4t-kernel-headers
-task-done "Prevent OTA updates of bootloader & kernel"
+#task-start "Prevent OTA updates of bootloader & kernel"
+#apt-mark hold nvidia-l4t-bootloader nvidia-l4t-kernel nvidia-l4t-kernel-dtbs nvidia-l4t-kernel-headers
+#task-done "Prevent OTA updates of bootloader & kernel"
 
 UBUNTU_VERSION="$(lsb_release -rs)" || exit $?
 

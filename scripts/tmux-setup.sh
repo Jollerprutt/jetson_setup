@@ -57,7 +57,6 @@ echo 'wifi.powersave = 2' >> /etc/NetworkManager/conf.d/default-wifi-powersave-o
 echo "WiFi power saving disabled"
 
 apt-yes install \
-    python-pip \
     python3-pip \
     htop \
     || exit $?
@@ -66,13 +65,13 @@ task-start "Setup ROS"
 $SCRIPT_DIR/ros-setup.sh || exit $?
 task-done "Setup ROS"
 
-task-start "Setup CAN"
-$SCRIPT_DIR/can-setup.sh || exit $?
-task-done "Setup CAN"
+#task-start "Setup CAN"
+#$SCRIPT_DIR/can-setup.sh || exit $?
+#task-done "Setup CAN"
 
-task-start "Setup SMaRC packages"
-$SCRIPT_DIR/smarc-setup.sh || exit $?
-task-done "Setup SMaRC packages"
+#task-start "Setup SMaRC packages"
+#$SCRIPT_DIR/smarc-setup.sh || exit $?
+#task-done "Setup SMaRC packages"
 
 task-start "Clean-up packages"
 apt --assume-yes autoremove || exit $?
