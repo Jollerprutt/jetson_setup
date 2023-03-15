@@ -58,13 +58,25 @@ cmd=$( printf 'echo "source /opt/ros/%q/setup.bash" >> ~/.bashrc' "${ROS_DISTRO}
 runuser -l ${TARGET_USER} -c "$cmd" || exit $?
 runuser -l ${TARGET_USER} -c 'source ~/.bashrc' || exit $?
 
-apt-yes install \
-    python3-rosdep \
-    python3-rosinstall \
-    python3-rosinstall-generator \
-    python3-wstool \
-    build-essential \
-    || exit $?
+if [ "$UBUNTU_VERSION" == "18.04" ];
+then
+        apt-yes install \
+            python-rosdep \
+            python-rosinstall \
+            python-rosinstall-generator \
+            python-wstool \
+            build-essential \
+            || exit $?
+else
+        
+        apt-yes install \
+            python3-rosdep \
+            python3-rosinstall \
+            python3-rosinstall-generator \
+            python3-wstool \
+            build-essential \
+            || exit $?
+fi
 
 rosdep init
 runuser -l ${TARGET_USER} -c 'rosdep update' || exit $?
@@ -74,14 +86,24 @@ task-done "Install ROS"
 task-start "Setup catkin"
 runuser -l ${TARGET_USER} -c 'echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc' || exit $?
 runuser -l ${TARGET_USER} -c 'mkdir -p ~/catkin_ws/src' || exit $?
-apt-yes install python3-catkin-tools || exit $?
+if [ "$UBUNTU_VERSION" == "18.04" ];
+then
+    apt-yes install python-catkin-tools || exit $?
+else
+    apt-yes install python3-catkin-tools || exit $?
+fi
 runuser -l ${TARGET_USER} -c "cd ~/catkin_ws/ && catkin build"
 
 task-done "Setup catkin"
 
 task-start "Install SMaRC dependencies"
+if [ "$UBUNTU_VERSION" == "18.04" ];
+then
+    apt-yes install python-vcstool || exit $?
+else
+    apt-yes install python3-vcstool || exit $?
+fi
 apt-yes install \
-    python3-vcstool \
     libsdl2-dev \
     libglew-dev \
     libfreetype6-dev \
